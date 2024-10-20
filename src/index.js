@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from 'express'; // -> ES Module
 import {handleUserSignUp} from "./controllers/user.controller.js";
 import { handleUserReview } from "./controllers/review.controller.js";
+import { handleShopMission } from "./controllers/mission.controller.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 app.post("/users",handleUserSignUp);
 app.post("/shop/:shopId/review",handleUserReview);
+app.post("/shop/:shopId/mission",handleShopMission);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

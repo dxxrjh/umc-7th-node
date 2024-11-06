@@ -28,7 +28,7 @@ model Mission {
   update_at     DateTime?       @db.DateTime(6)
   SHOP          Shop            @relation(fields: [shop_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MISSION_SHOP_id_fk")
   MISSION_ALARM MISSION_ALARM[]
-  USER_MISSION  USER_MISSION[]
+  USER_MISSION  UserMission[]
 
   @@map("MISSION")
   @@index([shop_id], map: "MISSION_SHOP_id_fk")
@@ -144,12 +144,12 @@ model User {
   PREFERENCE    Preference[]
   REVIEW        Review[]
   REVIEW_ALARM  REVIEW_ALARM[]
-  USER_MISSION  USER_MISSION[]
+  USER_MISSION  UserMission[]
 
   @@map("USER")
 }
 
-model USER_MISSION {
+model UserMission {
   id         BigInt    @id @default(autoincrement())
   user_id    BigInt?
   mission_id BigInt?
@@ -159,6 +159,7 @@ model USER_MISSION {
   MISSION    Mission?  @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "USER_MISSION_MISSION_id_fk")
   USER       User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "USER_MISSION_USER_id_fk")
 
+  @@map("USER_MISSION")
   @@index([mission_id], map: "USER_MISSION_MISSION_id_fk")
   @@index([user_id], map: "USER_MISSION_USER_id_fk")
 }

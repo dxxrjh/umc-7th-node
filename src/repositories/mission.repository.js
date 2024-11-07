@@ -54,3 +54,30 @@ export const getMission = async (missionId) => {
         );
     }
 };
+
+
+// 가게 미션 목록 조회
+export const getAllShopMissions = async (shopId, cursor) => {
+    console.log("Cursor:", cursor);
+    const missions = await prisma.mission.findMany({
+        select: {
+            id: true,
+            description: true,
+            point: true,
+            due_date: true,
+            shop_id: true,
+            SHOP: {
+                select: {
+                    name: true,  // 가게 이름 포함
+                },
+            },
+        },
+        where: {
+            shop_id: shopId,
+            id: cursor ? { gt: cursor } : undefined,
+        },
+        orderBy: { id: "asc" },
+        take: 3,
+    });
+    return missions;
+};

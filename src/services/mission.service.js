@@ -1,7 +1,8 @@
-import { responseFromUser } from "../dtos/mission.dto.js";
+import { responseFromUser, responseFromMissions } from "../dtos/mission.dto.js";
 import {
     addMission,
     getMission,
+    getAllShopMissions
 } from "../repositories/mission.repository.js";
 
 export const shopMission = async (req) => {
@@ -21,4 +22,10 @@ export const shopMission = async (req) => {
 
     // 응답 반환
     return responseFromUser({ mission });
+};
+
+
+export const listShopMission = async(shopId, cursor) => {
+    const missions=await getAllShopMissions(shopId, cursor);
+    return responseFromMissions(missions);
 };

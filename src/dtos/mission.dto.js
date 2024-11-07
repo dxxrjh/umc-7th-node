@@ -14,3 +14,12 @@ export const responseFromUser = ({ mission }) => {
       due_date:mission.due_date
     };
   };
+
+export const responseFromMissions = (missions) => {
+  return {
+    data: missions,  // 리뷰 데이터
+    pagination: {
+      cursor: missions.length ? missions[missions.length - 1].id : null,  // 다음 페이지의 커서
+    },
+  };
+};

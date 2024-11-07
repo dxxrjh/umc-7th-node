@@ -2,7 +2,8 @@ import { responseFromUser, responseFromReviews } from "../dtos/review.dto.js";
 import {
     addReview,
     getReview,
-    getAllShopReviews
+    getAllShopReviews,
+    getAllUserReviews
 } from "../repositories/review.repository.js";
 
 export const userReview = async (req) => {
@@ -27,5 +28,11 @@ export const userReview = async (req) => {
 
 export const listShopReview = async(shopId, cursor) => {
     const reviews=await getAllShopReviews(shopId, cursor);
+    return responseFromReviews(reviews);
+};
+
+export const listUserReview = async (cursor) => {
+    const userId = 10;  // 하드코딩된 userId
+    const reviews = await getAllUserReviews(userId, cursor);  // userId와 cursor를 넘겨서 해당 사용자의 리뷰 조회
     return responseFromReviews(reviews);
 };

@@ -88,3 +88,38 @@ export const getAllShopReviews = async (shopId, cursor) => {
     });
     return reviews;
 };
+
+export const getAllUserReviews = async (userId, cursor) => {
+    console.log("Cursor:", cursor);
+
+    // cursor 값이 문자열로 들어올 수 있기 때문에 정수로 변환
+    const cursorValue = cursor ? parseInt(cursor) : undefined;
+
+    const reviews = await prisma.review.findMany({
+        select: {
+            id: true,
+            rate: true,
+            content: true,
+            shop_id: true,
+            user_id: true,
+            SHOP: {
+                select: {
+                    name: true,  // 가게 이름 포함
+                },
+            },
+            USER: {
+                select: {
+                    name: true,  // 유저 이름 포함
+                },
+            },
+        },
+        where: {
+            user_id: userId, // 하드코딩된 userId를 필터링
+            id: cursorValue ? { gt: cursorValue } : undefined, // 커서가 있을 경우 id를 기준으로 페이지네이션
+        },
+        orderBy: { id: "asc" },  // 리뷰 id 기준 오름차순 정렬
+        take: 3,  // 한 번에 3개의 리뷰만 가져옴
+    });
+
+    return reviews;
+};

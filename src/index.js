@@ -2,7 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from 'express'; // -> ES Module
 import {handleUserSignUp} from "./controllers/user.controller.js";
-import { handleUserReview, handleListShopReview } from "./controllers/review.controller.js";
+import { handleUserReview, handleListShopReview, handleListUserReview } from "./controllers/review.controller.js";
 import { handleShopMission } from "./controllers/mission.controller.js";
 import { handleCompleteMission, handleStartMission } from "./controllers/usermission.controller.js";
 
@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 
 app.post("/users",handleUserSignUp);
 app.post("/shop/:shopId/review",handleUserReview);
+app.get("/users/reviews",handleListUserReview);
 app.get("/shop/:shopId/reviews",handleListShopReview);
 app.post("/shop/:shopId/mission",handleShopMission);
 app.post("/users/mission",handleStartMission);

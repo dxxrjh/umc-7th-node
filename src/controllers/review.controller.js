@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { bodyToReview } from "../dtos/review.dto.js";
-import { userReview, listShopReview } from "../services/review.service.js";
+import { userReview, listShopReview, listUserReview } from "../services/review.service.js";
 
 export const handleUserReview = async (req, res, next) => {
     console.log("리뷰 작성을 요청했습니다!");
@@ -33,6 +33,40 @@ export const handleListShopReview = async (req, res, next) => {
             });
         }
 
+        const reviewsArray = Array.isArray(reviews.data) ? reviews.data : [reviews.data];
+
+        // BigInt 값과 다른 필드를 안전하게 처리
+        const reviewsWithStringifiedBigInt = reviewsArray.map(review => ({
+            user_id: review.user_id ? review.user_id.toString() : null,
+            user_name: review.USER && review.USER.name ? review.USER.name : "No user name",
+            shop_name: review.SHOP && review.SHOP.name ? review.SHOP.name : "No shop name",
+            rate: `${review.rate}`,
+            content: `${review.content}`,
+        }));
+
+        return res.status(200).json({
+            data: reviewsWithStringifiedBigInt,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch reviews',
+            error: error.message,
+        });
+    }
+};
+
+export const handleListUserReview = async (req, res, next) => {
+    console.log("Cursor from request:", req.query.cursor);
+    // cursor 값은 쿼리 파라미터에서 가져오고, 없으면 0으로 설정
+    const cursorValue = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
+    console.log("Cursor passed to repository:", cursorValue);  // 레포지토리로 넘겨지는 값 확인
+    
+    try {
+        // 하드코딩된 userId (여기서 10으로 고정)
+        const reviews = await listUserReview(cursorValue);  // 커서값을 전달
+        
         const reviewsArray = Array.isArray(reviews.data) ? reviews.data : [reviews.data];
 
         // BigInt 값과 다른 필드를 안전하게 처리

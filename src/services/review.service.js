@@ -1,7 +1,8 @@
-import { responseFromUser } from "../dtos/review.dto.js";
+import { responseFromUser, responseFromReviews } from "../dtos/review.dto.js";
 import {
     addReview,
     getReview,
+    getAllShopReviews
 } from "../repositories/review.repository.js";
 
 export const userReview = async (req) => {
@@ -22,4 +23,9 @@ export const userReview = async (req) => {
 
     // 응답 반환
     return responseFromUser({ review });
+};
+
+export const listShopReview = async(shopId, cursor) => {
+    const reviews=await getAllShopReviews(shopId, cursor);
+    return responseFromReviews(reviews);
 };

@@ -57,3 +57,34 @@ export const getReview = async (reviewId) => {
         );
     }
 };
+
+// 가게 리뷰 목록 조회
+export const getAllShopReviews = async (shopId, cursor) => {
+    console.log("Cursor:", cursor);
+    const reviews = await prisma.review.findMany({
+        select: {
+            id: true,
+            rate: true,
+            content: true,
+            shop_id: true,
+            user_id: true,
+            SHOP: {
+                select: {
+                    name: true,  // 가게 이름 포함
+                },
+            },
+            USER: {
+                select: {
+                    name: true,  // 유저 이름 포함
+                },
+            },
+        },
+        where: {
+            shop_id: shopId,
+            id: cursor ? { gt: cursor } : undefined,
+        },
+        orderBy: { id: "asc" },
+        take: 3,
+    });
+    return reviews;
+};

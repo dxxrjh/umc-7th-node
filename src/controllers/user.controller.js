@@ -8,5 +8,5 @@ export const handleUserSignUp = async(req,res,next) => {
 
     const user=await userSignUp(bodyToUser(req.body));
     console.log("Response User:", user);
-    res.status(StatusCodes.OK).json({result: user})
+    res.status(StatusCodes.OK).success(user);
 };

@@ -17,6 +17,41 @@ export const handleUserReview = async (req, res, next) => {
 };
 
 export const handleListShopReview = async (req, res, next) => {
+    /*
+        #swagger.summary = '가게 리뷰 목록 조회 API';
+        #swagger.response[200] = {
+            description: "가게 리뷰 목록 조회 성공 응답",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "SUCCESS" },
+                            error: { type: "object", nullable: true, example: null },
+                            success: {
+                                type: "object",
+                                properties: {
+                                    data: {
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                id: { type: number },
+                                                shop: { type: "object", properties: { id: { type: "number" }, name: { type: "string" }}},
+                                                user: { type: "object", properties: { id: { type: "number" }, email: { type: "string" }, name: { type: "string" }}},
+                                                content: { type: "string" }
+                                            }
+                                        }
+                                    },
+                                    pagination: { type: "object", properties: { cursor: { type: "number", nullable: true }}}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+     */
     console.log("Cursor from request:", req.query.cursor);
     const cursorValue = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
     console.log("Cursor passed to repository:", cursorValue);  // 레포지토리로 넘겨지는 값 확인

@@ -1,5 +1,25 @@
 import { prisma } from "../db.config.js";
 
+//Id로 Mission 찾기
+export const findUserMissionById = async (userId, missionId) => {
+    try {
+        // USER_MISSION 테이블에서 특정 userId와 missionId가 일치하는 항목 검색
+        const userMission = await prisma.USER_MISSION.findUnique({
+            where: {
+                user_id_mission_id: {
+                    user_id: userId,
+                    mission_id: missionId
+                }
+            }
+        });
+        return userMission; // 미션이 존재하면 해당 레코드를 반환
+    } catch (error) {
+        console.error("Error finding user mission by ID:", error);
+        throw error;
+    }
+};
+
+
 // User Mission Data 삽입
 export const addUserMission = async (data) => {
     const { user_id, mission_id, status } = data;
@@ -42,3 +62,4 @@ export const updateUserMission = async (data) => {
         throw new Error(`미션 완료 업데이트 오류: ${err.message}`);
     }
 };
+

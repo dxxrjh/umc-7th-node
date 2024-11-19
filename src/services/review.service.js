@@ -1,4 +1,5 @@
 import { responseFromUser, responseFromReviews } from "../dtos/review.dto.js";
+import { NonExistingShopError } from "../errors.js";
 import {
     addReview,
     getReview,
@@ -16,7 +17,7 @@ export const userReview = async (req) => {
 
     // 리뷰가 성공적으로 추가되었는지 확인
     if (joinUserReview === null) {
-        throw new Error("존재하지 않는 가게입니다.");
+        throw new NonExistingShopError("존재하지 않는 가게입니다.", data);
     }
 
     // 추가된 리뷰를 ID로 조회

@@ -1,6 +1,8 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from 'express'; // -> ES Module
+import swaggerAutogen from "swagger-autogen";
+import swaggerUiExpress from "swagger-ui-express";
 import {handleUserSignUp} from "./controllers/user.controller.js";
 import { handleUserReview, handleListShopReview, handleListUserReview } from "./controllers/review.controller.js";
 import { handleListShopMission, handleShopMission } from "./controllers/mission.controller.js";
@@ -33,6 +35,36 @@ app.use(cors());
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+app.use(
+  "/docs",
+  swaggerUiExpress.serve, 
+  swaggerUiExpress.setup({},{
+    swaggerOptions: { 
+      url: "/openapi.json",
+    },
+  })
+);
+
+app.get("/openapi.json", async(req, res, next) => {
+  //#swagger.ignore = true
+  const options = {
+    openapi: "3.0.0",
+    disableLogs: true,
+    writeOutputFile: false
+  };
+  const outputFile = "/dev/null"; //파일 출력 사용 X
+  const routes = ["./src/index.js"];
+  const doc = {
+    info: {
+      title: "UMC 7th",
+      description: "UMC 7th Node.js 테스트 프로젝트입니다.",
+    },
+    host: "localhost:3000",
+  };
+  const result = await swaggerAutogen(options)(outputFile, routes, doc);
+  res.json(result ? result.data : null);
+});
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

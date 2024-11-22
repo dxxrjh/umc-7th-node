@@ -45,7 +45,7 @@ export const handleShopMission = async (req, res, next) => {
       }
     };
     #swagger.responses[400] = {
-      description: "회원 가입 실패 응답",
+      description: "미션 등록 실패 응답",
       content: {
         "application/json": {
           schema: {
@@ -55,7 +55,7 @@ export const handleShopMission = async (req, res, next) => {
               error: {
                 type: "object",
                 properties: {
-                  errorCode: { type: "string", example: "U001" },
+                  errorCode: { type: "string", example: "U002" },
                   reason: { type: "string" },
                   data: { type: "object" }
                 }

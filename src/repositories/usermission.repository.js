@@ -1,4 +1,5 @@
 import { prisma } from "../db.config.js";
+import { AlreadyAddedMissionError } from "../errors.js";
 
 //Id로 Mission 찾기
 export const findUserMissionById = async (userId, missionId) => {
@@ -25,6 +26,22 @@ export const addUserMission = async (data) => {
     const { user_id, mission_id, status } = data;
 
     try {
+        // missionId와 userId 쌍이 이미 존재하는지 확인
+        const missionExists = await prisma.userMission.count({
+            where: {
+                user_id: user_id,
+                mission_id: mission_id,
+            }
+        });
+
+        // 이미 존재하는 미션이 있다면, 커스텀 에러를 던지기
+        if (missionExists > 0) {
+            throw new AlreadyAddedMissionError(
+                "이미 도전한 미션입니다.",
+                { user_id, mission_id }
+            );
+        }
+        //미션 추가 로직
         const result = await prisma.userMission.create({
             data: {
                 user_id: user_id,

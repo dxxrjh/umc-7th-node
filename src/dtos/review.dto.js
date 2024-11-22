@@ -8,7 +8,7 @@ export const bodyToReview=(body) => {
 
 export const responseFromUser = ({ review }) => {
     return {
-      rate: review.rate,
+        rate: review.rate,
         content: review.content
     };
   };

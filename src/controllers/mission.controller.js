@@ -3,6 +3,70 @@ import { bodyToMission } from "../dtos/mission.dto.js";
 import { shopMission, listShopMission } from "../services/mission.service.js";
 
 export const handleShopMission = async (req, res, next) => {
+    /*
+    #swagger.summary = '미션 등록 API';
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              description: { type: "string" },
+              point: { type: "number" },
+              due_date: { type: "string"}
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[200] = {
+      description: "미션 등록 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  id: { type: number },
+                  shop: { type: "object", properties: { id: { type: "number" }, name: { type: "string" }}},
+                  description: { type: "string" },
+                  point: { type: "number" },
+                  due_date: { type: "string " }
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[400] = {
+      description: "회원 가입 실패 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "U001" },
+                  reason: { type: "string" },
+                  data: { type: "object" }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    };
+  */
     console.log("미션 추가를 요청했습니다!");
     console.log("body: ", req.body);
     console.log("shopId: ", req.params.shopId); // shopId 로그 추가
@@ -17,6 +81,42 @@ export const handleShopMission = async (req, res, next) => {
 };
 
 export const handleListShopMission = async (req, res, next) => {
+    /*
+        #swagger.summary = '가게 미션 목록 조회 API';
+        #swagger.response[200] = {
+            description: "가게 미션 목록 조회 성공 응답",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "SUCCESS" },
+                            error: { type: "object", nullable: true, example: null },
+                            success: {
+                                type: "object",
+                                properties: {
+                                    data: {
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                id: { type: number },
+                                                shop: { type: "object", properties: { id: { type: "number" }, name: { type: "string" }}},
+                                                description: { type: "string" },
+                                                point: { type: "number" },
+                                                due_date: { type: "string"}
+                                            }
+                                        }
+                                    },
+                                    pagination: { type: "object", properties: { cursor: { type: "number", nullable: true }}}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+     */
     console.log("Cursor from request:", req.query.cursor);
     const cursorValue = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;
     console.log("Cursor passed to repository:", cursorValue);  // 레포지토리로 넘겨지는 값 확인

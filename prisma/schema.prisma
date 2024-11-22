@@ -22,7 +22,7 @@ model Mission {
   id            BigInt          @id @default(autoincrement())
   shop_id       BigInt
   description   String?         @db.VarChar(100)
-  point         BigInt?
+  point         Int?
   due_date      DateTime?       @db.Date
   created_at    DateTime?       @db.DateTime(6)
   update_at     DateTime?       @db.DateTime(6)

@@ -76,3 +76,4 @@ export const handleUserSignUp = async(req,res,next) => {
     console.log("Response User:", user);
     res.status(StatusCodes.OK).success(user);
 };
+

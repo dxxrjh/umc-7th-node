@@ -3,6 +3,69 @@ import { bodyToReview } from "../dtos/review.dto.js";
 import { userReview, listShopReview, listUserReview } from "../services/review.service.js";
 
 export const handleUserReview = async (req, res, next) => {
+    /*
+    #swagger.summary = '리뷰 작성 API';
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              rate: { type: "number" },
+              content: { type: "string" },
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[200] = {
+      description: "리뷰 작성 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                    id: { type: "number" },
+                    user: { type: "object", properties: { id: { type: "number" }},                                                
+                    shop: { type: "object", properties: { id: { type: "number" }, name: { type: "string" }}},
+                    rate: { type: "number" }
+                    content: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[400] = {
+      description: "리뷰 작성 실패 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "U002" },
+                  reason: { type: "string" },
+                  data: { type: "object" }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    };
+  */
     console.log("리뷰 작성을 요청했습니다!");
     console.log("body: ", req.body);
     console.log("shopId: ", req.params.shopId); // shopId 로그 추가
@@ -37,8 +100,9 @@ export const handleListShopReview = async (req, res, next) => {
                                             type: "object",
                                             properties: {
                                                 id: { type: number },
+                                                user: { type: "object", properties: { id: { type: "number" }, email: { type: "string" }, name: { type: "string" }}},                                                
                                                 shop: { type: "object", properties: { id: { type: "number" }, name: { type: "string" }}},
-                                                user: { type: "object", properties: { id: { type: "number" }, email: { type: "string" }, name: { type: "string" }}},
+                                                rate: { type: "number" }
                                                 content: { type: "string" }
                                             }
                                         }
@@ -93,6 +157,42 @@ export const handleListShopReview = async (req, res, next) => {
 };
 
 export const handleListUserReview = async (req, res, next) => {
+    /*
+        #swagger.summary = '사용자 리뷰 목록 조회 API';
+        #swagger.response[200] = {
+            description: "사용자 리뷰 목록 조회 성공 응답",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "SUCCESS" },
+                            error: { type: "object", nullable: true, example: null },
+                            success: {
+                                type: "object",
+                                properties: {
+                                    data: {
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                id: { type: number },
+                                                user: { type: "object", properties: { id: { type: "number" }, email: { type: "string" }, name: { type: "string" }}},                                                
+                                                shop: { type: "object", properties: { id: { type: "number" }, name: { type: "string" }}},
+                                                rate: { type: "number" }
+                                                content: { type: "string" }
+                                            }
+                                        }
+                                    },
+                                    pagination: { type: "object", properties: { cursor: { type: "number", nullable: true }}}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+     */
     console.log("Cursor from request:", req.query.cursor);
     // cursor 값은 쿼리 파라미터에서 가져오고, 없으면 0으로 설정
     const cursorValue = typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0;

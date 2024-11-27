@@ -1,6 +1,8 @@
-export const bodyToUserMission = (missionId) => {
+export const bodyToUserMission = (missionId, userId) => {
+    console.log("bodyToUserMission params:", missionId, userId);  // 인자 확인
+
     return {
-        user_id: 10, // 하드코딩된 user_id
+        user_id: userId,
         mission_id: missionId,
         status: 'doing'
     };

@@ -3,8 +3,8 @@ import { prisma } from "../db.config.js";
 // Review Data 삽입
 export const addReview = async (data, req) => {
     const shopId = req.params.shopId;
-    const userId = 10; // 하드코딩된 user_id
-    const { rate, content } = data; // userId를 제거하고, rate와 content만 가져옴
+    const userId = req.user?.id || req.session?.userId;
+    const { rate, content } = data;
 
     try {
         // 가게 존재 여부 확인
@@ -89,10 +89,11 @@ export const getAllShopReviews = async (shopId, cursor) => {
     return reviews;
 };
 
+// 사용자 리뷰 목록 조회
 export const getAllUserReviews = async (userId, cursor) => {
     console.log("Cursor:", cursor);
 
-    // cursor 값이 문자열로 들어올 수 있기 때문에 정수로 변환
+    // 커서 값이 문자열로 들어올 수 있기 때문에 정수로 변환
     const cursorValue = cursor ? parseInt(cursor) : undefined;
 
     const reviews = await prisma.review.findMany({
@@ -114,7 +115,7 @@ export const getAllUserReviews = async (userId, cursor) => {
             },
         },
         where: {
-            user_id: userId, // 하드코딩된 userId를 필터링
+            user_id: userId,
             id: cursorValue ? { gt: cursorValue } : undefined, // 커서가 있을 경우 id를 기준으로 페이지네이션
         },
         orderBy: { id: "asc" },  // 리뷰 id 기준 오름차순 정렬

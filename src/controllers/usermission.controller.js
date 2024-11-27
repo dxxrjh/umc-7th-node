@@ -68,8 +68,9 @@ export const handleStartMission = async (req, res, next) => {
     if (!missionId) {
         return res.status(StatusCodes.BAD_REQUEST).json({ error: "missionId가 필요합니다." });
     }
+    console.log("Mission ID: ", missionId);
 
-    const result = await startMission(missionId);
+    const result = await startMission(req, missionId);
     res.status(StatusCodes.CREATED).json({ result });
 };
 
@@ -120,7 +121,7 @@ export const handleCompleteMission = async (req, res) => {
 
     try {
         // 미션 상태 업데이트
-        const result = await completeMission(missionId);
+        const result = await completeMission(req,missionId);
         
         if (!result) {
             return res.status(404).json({ error: "미션을 찾을 수 없습니다." });

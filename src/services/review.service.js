@@ -10,7 +10,7 @@ import {
 export const userReview = async (req) => {
     const body = req.body;
     const shopId = req.params.shopId; // shopId를 여기에 추가
-    const userId = 10; // 하드코딩된 user_id
+    const userId = req.user?.id || req.session?.userId;
 
     // 리뷰 추가
     const joinUserReview = await addReview(body, req); // req를 넘김
@@ -33,7 +33,7 @@ export const listShopReview = async(shopId, cursor) => {
 };
 
 export const listUserReview = async (cursor) => {
-    const userId = 10;  // 하드코딩된 userId
+    const userId = req.user?.id || req.session?.userId;
     const reviews = await getAllUserReviews(userId, cursor);  // userId와 cursor를 넘겨서 해당 사용자의 리뷰 조회
     return responseFromReviews(reviews);
 };

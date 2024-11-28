@@ -11,11 +11,14 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import session from "express-session";
 import passport from "passport";
 import { googleStrategy } from "./auth.config.js";
+import { kakaoStrategy } from "./auth.config.js";
 import { prisma } from "./db.config.js";
 
 dotenv.config();
 
 passport.use(googleStrategy);
+passport.use(kakaoStrategy);
+
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 const app = express()
@@ -81,6 +84,19 @@ app.get(
     failureMessage: true,
   }),
   (req, res) => res.redirect("/")
+);
+
+app.get("/oauth2/login/kakao", passport.authenticate("kakao"));
+app.get(
+  "/oauth2/callback/kakao",
+  passport.authenticate("kakao", {
+    failureRedirect: "/oauth2/login/kakao",
+    failureMessage: true,
+  }),
+  (req, res) => {
+    console.log("Kakao Login Successful:", req.user);
+    res.redirect("/");
+  }
 );
 
 app.get("/openapi.json", async(req, res, next) => {

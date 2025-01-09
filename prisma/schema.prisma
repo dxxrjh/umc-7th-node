@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id         BigInt       @id @default(autoincrement())
+  name       String?      @db.VarChar(100)
+  created_at DateTime?    @db.DateTime(0)
+  updated_at DateTime?    @db.DateTime(0)
+  PREFERENCE Preference[]
+  SHOP       Shop[]
+
+  @@map("CATEGORY")
+}
+
+model Mission {
+  id            BigInt          @id @default(autoincrement())
+  shop_id       BigInt
+  description   String?         @db.VarChar(100)
+  point         Int?
+  due_date      DateTime?       @db.Date
+  created_at    DateTime?       @db.DateTime(6)
+  update_at     DateTime?       @db.DateTime(6)
+  SHOP          Shop            @relation(fields: [shop_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MISSION_SHOP_id_fk")
+  MISSION_ALARM MISSION_ALARM[]
+  USER_MISSION  UserMission[]
+
+  @@map("MISSION")
+  @@index([shop_id], map: "MISSION_SHOP_id_fk")
+}
+
+model MISSION_ALARM {
+  id           BigInt    @id @default(autoincrement())
+  user_id      BigInt
+  mission_id   BigInt
+  is_confirmed Boolean?
+  title        String?   @db.VarChar(100)
+  body         String?   @db.VarChar(100)
+  created_time DateTime? @db.DateTime(6)
+  updated_time DateTime? @db.DateTime(6)
+  MISSION      Mission   @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MISSION_ALARM_MISSION_id_fk")
+  USER         User      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MISSION_ALARM_USER_id_fk")
+
+  @@index([mission_id], map: "MISSION_ALARM_MISSION_id_fk")
+  @@index([user_id], map: "MISSION_ALARM_USER_id_fk")
+}
+
+model Preference {
+  id          Int       @id @default(autoincrement())
+  user_id     BigInt?
+  category_id BigInt?
+  created_at  BigInt?
+  updated_at  DateTime? @db.DateTime(0)
+  CATEGORY    Category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PREFERENCE_CATEGORY_id_fk")
+  USER        User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PREFERENCE_USER_id_fk")
+
+  @@map("PREFERENCE")
+  @@index([category_id], map: "PREFERENCE_CATEGORY_id_fk")
+  @@index([user_id], map: "PREFERENCE_USER_id_fk")
+}
+
+model Review {
+  id           BigInt         @id @default(autoincrement())
+  user_id      BigInt
+  shop_id      BigInt
+  rate         Decimal?       @db.Decimal(2, 1)
+  content      String?        @db.VarChar(500)
+  created_at   DateTime?      @db.DateTime(6)
+  updated_at   DateTime?      @db.DateTime(6)
+  SHOP         Shop           @relation(fields: [shop_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "REVIEW_SHOP_id_fk")
+  USER         User           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "REVIEW_USER_id_fk")
+  REVIEW_ALARM REVIEW_ALARM[]
+  REVIEW_IMAGE REVIEW_IMAGE[]
+
+  @@map("REVIEW")
+  @@index([shop_id], map: "REVIEW_SHOP_id_fk")
+  @@index([user_id], map: "REVIEW_USER_id_fk")
+}
+
+model REVIEW_ALARM {
+  id           BigInt    @id @default(autoincrement())
+  user_id      BigInt
+  review_id    BigInt?
+  is_confirmed Boolean?
+  title        String?   @db.VarChar(100)
+  body         String?   @db.VarChar(100)
+  created_at   DateTime? @db.DateTime(6)
+  updated_at   DateTime? @db.DateTime(6)
+  REVIEW       Review?   @relation(fields: [review_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "REVIEW_ALARM_REVIEW_id_fk")
+  USER         User      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_alarm_ibfk_1")
+
+  @@index([review_id], map: "REVIEW_ALARM_REVIEW_id_fk")
+  @@index([user_id], map: "review_alarm_ibfk_1")
+}
+
+model REVIEW_IMAGE {
+  id         BigInt    @id @default(autoincrement())
+  review_id  BigInt?
+  image_url  String?   @db.VarChar(100)
+  created_at BigInt?
+  updated_at DateTime? @db.DateTime(0)
+  REVIEW     Review?   @relation(fields: [review_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "REVIEW_IMAGE_REVIEW_id_fk")
+
+  @@index([review_id], map: "REVIEW_IMAGE_REVIEW_id_fk")
+}
+
+model Shop {
+  id          BigInt    @id @default(autoincrement())
+  name        String?   @db.VarChar(100)
+  category_id BigInt?
+  distance    Decimal?  @db.Decimal(5, 1)
+  running     Boolean?
+  rate        Decimal?  @db.Decimal(2, 1)
+  location    String?   @db.VarChar(100)
+  created_at  DateTime? @db.DateTime(6)
+  updated_at  DateTime? @db.DateTime(0)
+  MISSION     Mission[]
+  REVIEW      Review[]
+  CATEGORY    Category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SHOP_CATEGORY_id_fk")
+
+  @@map("SHOP")
+  @@index([category_id], map: "SHOP_CATEGORY_id_fk")
+}
+
+model User {
+  id            BigInt          @id @default(autoincrement())
+  name          String          @db.VarChar(100)
+  gender        String?         @db.VarChar(10)
+  birthday      DateTime?       @db.Date
+  address       String?         @db.VarChar(100)
+  email         String?         @db.VarChar(100)
+  phone_num     String?         @db.VarChar(100)
+  point         BigInt?         @default(0)
+  status        String?         @db.VarChar(100)
+  inactive_date DateTime?       @db.Date
+  created_at    DateTime?       @db.DateTime(6)
+  updated_at    DateTime?       @db.DateTime(6)
+  MISSION_ALARM MISSION_ALARM[]
+  PREFERENCE    Preference[]
+  REVIEW        Review[]
+  REVIEW_ALARM  REVIEW_ALARM[]
+  USER_MISSION  UserMission[]
+
+  @@map("USER")
+}
+
+model UserMission {
+  id         BigInt    @id @default(autoincrement())
+  user_id    BigInt?
+  mission_id BigInt?
+  status     String?   @db.VarChar(100)
+  created_at BigInt?
+  updated_at DateTime? @db.DateTime(0)
+  MISSION    Mission?  @relation(fields: [mission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "USER_MISSION_MISSION_id_fk")
+  USER       User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "USER_MISSION_USER_id_fk")
+
+  @@map("USER_MISSION")
+  @@index([mission_id], map: "USER_MISSION_MISSION_id_fk")
+  @@index([user_id], map: "USER_MISSION_USER_id_fk")
+}
+
+model session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.VarChar(512)
+  expiresAt DateTime @map("expires_at")
+
+  @@map("session")
+}
